@@ -198,14 +198,51 @@ def app():
                 Cursor=cnx.cursor()
                 #conPic = conToBin(dir)
                 #st.write("inserting into DB")
-                InsertQuery="INSERT INTO DETAILS VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-                data=(usn,Name,branch,fee_pending,fee_paid,fee_paid_date,html1,admission_sought,Email,Ph_number,parents_mobile_number,postal_address,admission_year,admission_quota,cat,pe1,pe2,oe1,oe2)
-                #st.write("Executing the query")
-                Cursor.execute(InsertQuery,data)
-                #st.write("commit to DB")
-                cnx.commit()
-                cnx.close()
-                st.write("Data Inserted Successfully")
+                if(branch=='CSE - Computer Science and Engineering'):
+                    InsertQuery="INSERT INTO CSE VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                    data=(usn,Name,branch,fee_pending,fee_paid,fee_paid_date,html1,admission_sought,Email,Ph_number,parents_mobile_number,postal_address,admission_year,admission_quota,cat,pe1,pe2,oe1,oe2)
+                    #st.write("Executing the query")
+                    Cursor.execute(InsertQuery,data)
+                    #st.write("commit to DB")
+                    cnx.commit()
+                    cnx.close()
+                    st.write("Data Inserted Successfully")
+                elif(branch=='ECE - Electronics and Communication Engineering'):
+                    InsertQuery="INSERT INTO ECE VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                    data=(usn,Name,branch,fee_pending,fee_paid,fee_paid_date,html1,admission_sought,Email,Ph_number,parents_mobile_number,postal_address,admission_year,admission_quota,cat,pe1,pe2,oe1,oe2)
+                    #st.write("Executing the query")
+                    Cursor.execute(InsertQuery,data)
+                    #st.write("commit to DB")
+                    cnx.commit()
+                    cnx.close()
+                    st.write("Data Inserted Successfully")
+                elif(branch=='EEE - Electrical and Electronics Engineering'):
+                    InsertQuery="INSERT INTO EEE VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                    data=(usn,Name,branch,fee_pending,fee_paid,fee_paid_date,html1,admission_sought,Email,Ph_number,parents_mobile_number,postal_address,admission_year,admission_quota,cat,pe1,pe2,oe1,oe2)
+                    #st.write("Executing the query")
+                    Cursor.execute(InsertQuery,data)
+                    #st.write("commit to DB")
+                    cnx.commit()
+                    cnx.close()
+                    st.write("Data Inserted Successfully")
+                elif(branch=='CIV - Civil Engineering'):
+                    InsertQuery="INSERT INTO CIV VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                    data=(usn,Name,branch,fee_pending,fee_paid,fee_paid_date,html1,admission_sought,Email,Ph_number,parents_mobile_number,postal_address,admission_year,admission_quota,cat,pe1,pe2,oe1,oe2)
+                    #st.write("Executing the query")
+                    Cursor.execute(InsertQuery,data)
+                    #st.write("commit to DB")
+                    cnx.commit()
+                    cnx.close()
+                    st.write("Data Inserted Successfully")
+                elif(branch=='MEC - Mechanical Engineering'):
+                    InsertQuery="INSERT INTO MECH VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                    data=(usn,Name,branch,fee_pending,fee_paid,fee_paid_date,html1,admission_sought,Email,Ph_number,parents_mobile_number,postal_address,admission_year,admission_quota,cat,pe1,pe2,oe1,oe2)
+                    #st.write("Executing the query")
+                    Cursor.execute(InsertQuery,data)
+                    #st.write("commit to DB")
+                    cnx.commit()
+                    cnx.close()
+                    st.write("Data Inserted Successfully")
             except Error as e:
                 print("Error occured",e)
 
