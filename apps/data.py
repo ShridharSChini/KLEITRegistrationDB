@@ -1,124 +1,124 @@
 import streamlit as st
-import numpy as np
 import pandas as pd
-import mysql.connector as sqlc
-from mysql.connector import Error
+from pathlib import Path
 
+def check_password():
+    """Returns `True` if the user had a correct password."""
+    def password_entered():
+        """Checks whether a password entered by the user is correct."""
+        if (
+            st.session_state["username"] in st.secrets["passwords"]
+            and st.session_state["password"]
+            == st.secrets["passwords"][st.session_state["username"]]
+        ):
+            st.session_state["password_correct"] = True
+            del st.session_state["password"]  # don't store username + password
+            st.session_state['user'] = st.session_state["username"]
+            # del st.session_state["username"]
+        else:
+            st.session_state["password_correct"] = False
+
+    if "password_correct" not in st.session_state:
+        # First run, show inputs for username + password.
+        st.text_input("Username", on_change=password_entered, key="username")
+        st.text_input(
+            "Password", type="password", on_change=password_entered, key="password"
+        )
+        return False
+    elif not st.session_state["password_correct"]:
+        # Password not correct, show input + error.
+        st.text_input("Username", on_change=password_entered, key="username")
+        st.text_input(
+            "Password", type="password", on_change=password_entered, key="password"
+        )
+        st.error("😕 User not known or password incorrect")
+        return False
+    else:
+        # Password correct.
+        # st.write(st.secrets["passwords"])
+        return True
 
 def app():
     try:
-        branch_li = ['Select your branch','CSE - Computer Science and Engineering','ECE - Electronics and Communication Engineering',
-        'EEE - Electrical and Electronics Engineering','CIV - Civil Engineering','MEC - Mechanical Engineering',
-        'MCA - Master of Computer Application']
+        if check_password():
+            user = st.session_state["user"]
+            dept = user[-3:].upper()
 
-        branch = st.selectbox('Branch:',branch_li)
+            csv_path = Path(__file__).parent.parent / "students.csv"
+            result = pd.read_csv(csv_path)
 
-        cnx=sqlc.connect(host="localhost",user="root",password="root",database="sdm")
-        Cursor=cnx.cursor()
-        if(branch=='CSE - Computer Science and Engineering'):
-            SelectQuery="SELECT * FROM CSE"
-            Cursor.execute(SelectQuery)
-            data=Cursor.fetchall()
-            result=pd.DataFrame(data)
-            result.columns=['USN','Full Name','Branch','Fees Due','Fees Paid','Date of Payment','Receipt','Admission Sought','Email','Mobile No.','Parents Mob. No.','Postal Address','Admission To','Admission Quota','Category','Prof. Elective-1','Prof. Elective-2','Open Elective-1','Open Elective-2']
-        
-            # st.write(result['Receipt'])
-            # st.write(type(str(result['Receipt'])))
-            # result['Receipt'] = str(result['Receipt'])
-            # result['Receipt'] =result['Receipt'].apply(result['Receipt'])
+            csv_file = open(csv_path,"rb")
+            st.download_button(label= "Download All Registerd Student List",data=csv_file,file_name="students" + ".csv",mime="text/csv")
+            
+            no_of_students = 0
+            fees_pending = 0
+            fees_paid = 0
+            header = False
+            for j in range(0,len(list(result['branch']))):
+                usn,Name,branch,fee_pending,fee_paid,fee_paid_date,Ph_number,admission_year,admission_quota,btn = st.columns([1,2,1,2,2,1,2,1,1,1],gap="small")
+                
+                if header == False:
+                    header = True
+                    with usn:
+                        st.markdown("**:red[USN]**")
+                        st.write(" ")
+                    with Name:
+                        st.markdown("**:red[Name]**")
+                        st.write(" ")
+                    with branch:
+                        st.markdown("**:red[Branch]**")
+                        st.write(" ")
 
-            st.markdown(result.to_html(render_links=True,escape=False),unsafe_allow_html=True)
-            # result = result.to_html(escape=False)
-            # st.write(result,unsafe_allow_html = True) 
-            # st.dataframe(result)
-            # cnx.commit()
-            CountQuery="SELECT COUNT(*) FROM CSE"
-            Cursor.execute(CountQuery)
-            for row in Cursor:
-                st.write("Total Count:",row[0])
-            PaidQuery="SELECT SUM(FEES_PAID) FROM CSE"
-            Cursor.execute(PaidQuery)
-            for row in Cursor:
-                st.write("Total Fees Paid:",row[0])
-            PendingQuery="SELECT SUM(FEES_PENDING) FROM CSE"
-            Cursor.execute(PendingQuery)
-            for row in Cursor:
-                st.write("Total Fees Pending:",row[0])
-        elif(branch=='ECE - Electronics and Communication Engineering'):
-            SelectQuery="SELECT * FROM ECE"
-            Cursor.execute(SelectQuery)
-            data=Cursor.fetchall()
-            result=pd.DataFrame(data)
-            result.columns=['USN','Full Name','Branch','Fees Due','Fees Paid','Date of Payment','Receipt','Admission Sought','Email','Mobile No.','Parents Mob. No.','Postal Address','Admission To','Admission Quota','Category','Prof. Elective-1','Prof. Elective-2','Open Elective-1','Open Elective-2']
-            st.markdown(result.to_html(render_links=True,escape=False),unsafe_allow_html=True)
-            CountQuery="SELECT COUNT(*) FROM ECE"
-            Cursor.execute(CountQuery)
-            for row in Cursor:
-                st.write("Total Count:",row[0])
-            PaidQuery="SELECT SUM(FEES_PAID) FROM ECE"
-            Cursor.execute(PaidQuery)
-            for row in Cursor:
-                st.write("Total Fees Paid:",row[0])
-            PendingQuery="SELECT SUM(FEES_PENDING) FROM ECE"
-            Cursor.execute(PendingQuery)
-            for row in Cursor:
-                st.write("Total Fees Pending:",row[0])
-        elif(branch=='EEE - Electrical and Electronics Engineering'):
-            SelectQuery="SELECT * FROM EEE"
-            Cursor.execute(SelectQuery)
-            data=Cursor.fetchall()
-            result=pd.DataFrame(data)
-            result.columns=['USN','Full Name','Branch','Fees Due','Fees Paid','Date of Payment','Receipt','Admission Sought','Email','Mobile No.','Parents Mob. No.','Postal Address','Admission To','Admission Quota','Category','Prof. Elective-1','Prof. Elective-2','Open Elective-1','Open Elective-2']
-            st.markdown(result.to_html(render_links=True,escape=False),unsafe_allow_html=True)
-            CountQuery="SELECT COUNT(*) FROM EEE"
-            Cursor.execute(CountQuery)
-            for row in Cursor:
-                st.write("Total Count:",row[0])
-            PaidQuery="SELECT SUM(FEES_PAID) FROM EEE"
-            Cursor.execute(PaidQuery)
-            for row in Cursor:
-                st.write("Total Fees Paid:",row[0])
-            PendingQuery="SELECT SUM(FEES_PENDING) FROM EEE"
-            Cursor.execute(PendingQuery)
-            for row in Cursor:
-                st.write("Total Fees Pending:",row[0])
-        elif(branch=='CIV - Civil Engineering'):
-            SelectQuery="SELECT * FROM CIV"
-            Cursor.execute(SelectQuery)
-            data=Cursor.fetchall()
-            result=pd.DataFrame(data)
-            result.columns=['USN','Full Name','Branch','Fees Due','Fees Paid','Date of Payment','Receipt','Admission Sought','Email','Mobile No.','Parents Mob. No.','Postal Address','Admission To','Admission Quota','Category','Prof. Elective-1','Prof. Elective-2','Open Elective-1','Open Elective-2']
-            st.markdown(result.to_html(render_links=True,escape=False),unsafe_allow_html=True)
-            CountQuery="SELECT COUNT(*) FROM CIV"
-            Cursor.execute(CountQuery)
-            for row in Cursor:
-                st.write("Total Count:",row[0])
-            PaidQuery="SELECT SUM(FEES_PAID) FROM CIV"
-            Cursor.execute(PaidQuery)
-            for row in Cursor:
-                st.write("Total Fees Paid:",row[0])
-            PendingQuery="SELECT SUM(FEES_PENDING) FROM CIV"
-            Cursor.execute(PendingQuery)
-            for row in Cursor:
-                st.write("Total Fees Pending:",row[0])
-        elif(branch=='MEC - Mechanical Engineering'):
-            SelectQuery="SELECT * FROM MECH"
-            Cursor.execute(SelectQuery)
-            data=Cursor.fetchall()
-            result=pd.DataFrame(data)
-            result.columns=['USN','Full Name','Branch','Fees Due','Fees Paid','Date of Payment','Receipt','Admission Sought','Email','Mobile No.','Parents Mob. No.','Postal Address','Admission To','Admission Quota','Category','Prof. Elective-1','Prof. Elective-2','Open Elective-1','Open Elective-2']
-            st.markdown(result.to_html(render_links=True,escape=False),unsafe_allow_html=True)
-            CountQuery="SELECT COUNT(*) FROM MECH"
-            Cursor.execute(CountQuery)
-            for row in Cursor:
-                st.write("Total Count:",row[0])
-            PaidQuery="SELECT SUM(FEES_PAID) FROM MECH"
-            Cursor.execute(PaidQuery)
-            for row in Cursor:
-                st.write("Total Fees Paid:",row[0])
-            PendingQuery="SELECT SUM(FEES_PENDING) FROM MECH"
-            Cursor.execute(PendingQuery)
-            for row in Cursor:
-                st.write("Total Fees Pending:",row[0])
-    except Error as e:
-        print("Error occured",e)
+                    with fee_pending:
+                        st.markdown("**:red[Fee Pending]**")
+                        st.write(" ")
+                    with fee_paid:
+                        st.markdown("**:red[Fee Paid]**")
+                        st.write(" ")
+                    with fee_paid_date:
+                        st.markdown("**:red[Date]**")
+                        st.write(" ")
+                    with Ph_number:
+                        st.markdown("**:red[Ph. No.]**")
+                        st.write(" ")
+                    with admission_year:
+                        st.markdown("**:red[Year]**")
+                        st.write(" ")
+                    with admission_quota:
+                        st.markdown("**:red[Quota]**")
+                        st.write(" ")
+                    with btn:
+                        st.markdown("**:red[Receipt]**")
+                        st.write(" ")
+
+                if list(result["branch"])[j] == dept or user == "admin":
+                    
+                    no_of_students = no_of_students+1
+
+                    with usn:   
+                        st.write(str(list(result["usn"])[j]).upper())
+                    with Name:
+                            st.write((list(result["Name"])[j]).capitalize())
+                    with branch:
+                            st.write(list(result["branch"])[j])
+                    with fee_pending:
+                            st.write(str(list(result["fee_pending"])[j]))
+                    with fee_paid:
+                            st.write(str(list(result["fee_paid"])[j]))
+                    with fee_paid_date:
+                            st.write(list(result["fee_paid_date"])[j])
+                    with Ph_number:
+                            st.write(str(list(result["Ph_number"])[j]))
+                    with admission_year:
+                            st.write(list(result["admission_year"])[j])
+                    with admission_quota:
+                            st.write(list(result["admission_quota"])[j])
+                    with btn:
+                        img = open(result["html1"][j],"rb")
+                        (st.download_button(label= str(list(result["usn"])[j]).upper(),data=img,file_name=str(list(result["usn"])[j]).upper() + ".png"))
+                    
+            st.write("Total No. of students : ",len(list(result['fee_pending'])))
+            st.write("Fees Pending : ",sum(list(result['fee_pending'])))
+            st.write("Fees Pending : ",sum(list(result['fee_paid'])))
+    except FileNotFoundError as e:
+         st.write("No student has registerd yet",e)
