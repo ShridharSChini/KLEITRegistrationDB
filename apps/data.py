@@ -48,14 +48,14 @@ def app():
             result = pd.read_csv(csv_path)
 
             csv_file = open(csv_path,"rb")
-            st.download_button(label= "Download All Registerd Student List",data=csv_file,file_name="students" + ".csv",mime="text/csv")
+            st.download_button(label= "Download All Registerd Student of Your Dept.",data=csv_file,file_name="students" + ".csv",mime="text/csv")
             
             no_of_students = 0
             fees_pending = 0
             fees_paid = 0
             header = False
             for j in range(0,len(list(result['branch']))):
-                usn,Name,branch,fee_pending,fee_paid,fee_paid_date,Ph_number,admission_year,admission_quota,btn = st.columns([1,2,1,2,2,1,2,1,1,1],gap="small")
+                usn,Name,fee_pending,fee_paid,Ph_number,admission_quota,btn = st.columns([1.5,2,2,2,2,1,2],gap="small")
                 
                 if header == False:
                     header = True
@@ -65,9 +65,9 @@ def app():
                     with Name:
                         st.markdown("**:red[Name]**")
                         st.write(" ")
-                    with branch:
-                        st.markdown("**:red[Branch]**")
-                        st.write(" ")
+                    # with branch:
+                    #     st.markdown("**:red[Branch]**")
+                    #     st.write(" ")
 
                     with fee_pending:
                         st.markdown("**:red[Fee Pending]**")
@@ -75,14 +75,14 @@ def app():
                     with fee_paid:
                         st.markdown("**:red[Fee Paid]**")
                         st.write(" ")
-                    with fee_paid_date:
-                        st.markdown("**:red[Date]**")
-                        st.write(" ")
+                    # with fee_paid_date:
+                    #     st.markdown("**:red[Date]**")
+                    #     st.write(" ")
                     with Ph_number:
                         st.markdown("**:red[Ph. No.]**")
                         st.write(" ")
-                    with admission_year:
-                        st.markdown("**:red[Year]**")
+                    # with admission_year:
+                    #     st.markdown("**:red[Year]**")
                         st.write(" ")
                     with admission_quota:
                         st.markdown("**:red[Quota]**")
@@ -99,18 +99,18 @@ def app():
                         st.write(str(list(result["usn"])[j]).upper())
                     with Name:
                             st.write((list(result["Name"])[j]).capitalize())
-                    with branch:
-                            st.write(list(result["branch"])[j])
+                    # with branch:
+                    #         st.write(list(result["branch"])[j])
                     with fee_pending:
                             st.write(str(list(result["fee_pending"])[j]))
                     with fee_paid:
                             st.write(str(list(result["fee_paid"])[j]))
-                    with fee_paid_date:
-                            st.write(list(result["fee_paid_date"])[j])
+                    # with fee_paid_date:
+                    #         st.write(list(result["fee_paid_date"])[j])
                     with Ph_number:
                             st.write(str(list(result["Ph_number"])[j]))
-                    with admission_year:
-                            st.write(list(result["admission_year"])[j])
+                    # with admission_year:
+                    #         st.write(list(result["admission_year"])[j])
                     with admission_quota:
                             st.write(list(result["admission_quota"])[j])
                     with btn:
